@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eon legion</title>
+    <link id="favicon" rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/update-notifier.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700;800&display=swap">
+</head>
+
+<body>
+    <div class="fullscreen-root">
+        <canvas class="game-canvas" id="gameCanvas"></canvas>
+
+        <div id="hud-leaderboard" class="hud-leaderboard">
+            <div class="lb-header">Leaderboard</div>
+            <div class="lb-content">
+            </div>
+        </div>
+
+        <div id="hud-bottom-left" class="hud-bottom-left">
+            <div id="chat-container" class="chat-container">
+                <div class="chat-resize-handle" id="chat-resize"></div>
+                <div class="chat-messages" id="chat-messages">
+                </div>
+            </div>
+
+        </div>
+
+        <div id="hud-bottom-center" class="hud-bottom-center">
+            <div id="stats-hud" class="stats-hud"></div>
+            <div id="hud-server-timer" class="stat-badge server-timer-badge">
+                <span>FFA EUROPE - 00h 00m 00s</span>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="chat-input-container" class="chat-input-container">
+        <div id="emoji-picker" class="emoji-picker"></div>
+        <input type="text" id="chat-input" class="chat-input-field" name="chatmessage"
+            placeholder="Press Enter to Chat..." maxlength="100" autocomplete="off" autocorrect="off"
+            autocapitalize="off" spellcheck="false" data-form-type="other" data-lpignore="true">
+        <div id="emoji-toggle" class="emoji-toggle">
+            <i class="fa-solid fa-face-smile"></i>
+        </div>
+    </div>
+
+    <div id="minimap-container">
+        <canvas id="minimap" width="0" height="0"></canvas>
+    </div>
+
+    <div id="pause-hud" class="pause-hud" style="display: none;">
+        <i class="fa-solid fa-pause"></i>
+        PAUSED
+    </div>
+
+    <div id="countdown-overlay" class="countdown-overlay" style="display: none;">
+        <i class="fa-solid fa-clock countdown-icon"></i>
+        <div class="countdown-text">SERVER RESTARTING IN</div>
+        <div class="countdown-number">10</div>
+    </div>
+
+    <div class="lobby-overlay">
+        <div class="lobby-menu">
+            <div class="lobby-menu-bar">
+                <button class="menu-btn btn-settings">
+                    <div class="btn-content">
+                        <i class="fa-solid fa-gear"></i><span>Settings</span>
+                    </div>
+                </button>
+
+                <div class="menu-center">
+                    <div class="center-content-wrapper">
+                        <div class="skin-left" style="background-image: url('https://i.imgur.com/S2Gu3R2.png');">
+                        </div>
+                        <div class="skin-right" style="background-image: url('https://i.imgur.com/S2Gu3R2.png');">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="menu-btn btn-play">
+                    <div class="btn-content">
+                        <i class="fa-solid fa-gamepad"></i><span>Play</span>
+                    </div>
+                </button>
+
+                <button class="menu-btn btn-spectate">
+                    <div class="btn-content">
+                        <i class="fa-solid fa-eye"></i><span>Spectate</span>
+                    </div>
+                </button>
+
+                <button class="menu-btn btn-reconnect-menu">
+                    <div class="btn-content">
+                        <i class="fa-solid fa-rotate-right"></i><span>Reconnect</span>
+                    </div>
+                </button>
+            </div>
+
+            <div class="profile-selector-bar">
+                <div class="profile-slot active" data-profile="1">1</div>
+                <div class="profile-slot" data-profile="2">2</div>
+                <div class="profile-slot" data-profile="3">3</div>
+                <div class="profile-slot" data-profile="4">4</div>
+                <div class="profile-slot" data-profile="5">5</div>
+                <div class="profile-slot" data-profile="6">6</div>
+                <div class="profile-slot" data-profile="7">7</div>
+                <div class="profile-slot" data-profile="8">8</div>
+                <div class="profile-slot" data-profile="9">9</div>
+                <div class="profile-slot" data-profile="10">10</div>
+            </div>
+
+            <div class="profile-inputs-wrapper">
+                <button class="profile-nav-arrow arrow-left">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="lobby-inputs-container">
+                    <div class="input-row">
+                        <input type="text" placeholder="Tag" class="lobby-input input-tag" maxlength="5">
+                        <input type="text" placeholder="Player 1" class="lobby-input input-p1" maxlength="15">
+                        <input type="text" placeholder="Player 2" class="lobby-input input-p2" maxlength="15">
+                    </div>
+                    <div class="input-row">
+                        <input type="text" placeholder="Skin URL 1" class="lobby-input input-skin1">
+                        <input type="text" placeholder="Skin URL 2" class="lobby-input input-skin2">
+                    </div>
+                    <div class="input-row">
+                        <div class="server-select-container">
+                            <div class="server-select-trigger">
+                                <span class="selected-text">FFA - EUROPE</span>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </div>
+                            <div class="server-options">
+                                <div class="server-option selected" data-value="wss://eu.senpa.io:2001">FFA - EUROPE
+                                </div>
+                                <div class="server-option" data-value="wss://us.senpa.io:2001">FFA - US NORTH</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="profile-nav-arrow arrow-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="reconnect-overlay" id="reconnectOverlay">
+        <div class="reconnect-box">
+            <div class="reconnect-title">Disconnected</div>
+            <div class="reconnect-message">Connection to the server was lost</div>
+            <div class="reconnect-spinner"></div>
+            <div class="reconnect-actions">
+                <button class="reconnect-btn btn-reconnect-action" id="btnReconnect">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Reconnect</span>
+                </button>
+                <button class="reconnect-btn btn-menu-action" id="btnMenu">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Return to Menu</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-modal">
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="general">General</button>
+                <button class="tab-btn" data-tab="theme">Theme</button>
+                <button class="tab-btn" data-tab="controls">Controls</button>
+            </div>
+
+            <div class="settings-content" id="settingsContent">
+            </div>
+
+            <div class="settings-footer">
+                <style>
+                    .settings-footer {
+                        gap: 10px;
+                        justify-content: center;
+                        /* Center them */
+                    }
+
+                    .settings-action-btn {
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        color: #ccc;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-family: inherit;
+                        transition: all 0.2s;
+                    }
+
+                    .settings-action-btn:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                        color: #fff;
+                    }
+
+                    .btn-danger {
+                        border-color: rgba(255, 50, 50, 0.5);
+                        color: #ff6b6b;
+                    }
+
+                    .btn-danger:hover {
+                        background: rgba(255, 0, 0, 0.2);
+                        color: #ff3333;
+                    }
+                </style>
+                <div style="flex: 1; display: flex; gap: 10px;">
+                    <button class="settings-action-btn" id="btnExport">Export</button>
+                    <button class="settings-action-btn" id="btnImport">Import</button>
+                    <button class="settings-action-btn btn-danger" id="btnResetAll">Reset</button>
+                    <input type="file" id="importFile" style="display: none" accept=".json">
+                </div>
+                <button class="close-settings-btn" id="closeSettingsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="update-notifier-overlay" class="update-notifier-overlay">
+        <div class="update-notifier-modal">
+            <div class="update-notifier-header">
+                <button id="update-notifier-close" class="update-notifier-close">×</button>
+                <h2 class="update-notifier-title">🎉 What's New</h2>
+                <div class="update-notifier-version" id="update-notifier-version">v1.0.0</div>
+                <div class="update-notifier-date" id="update-notifier-date">2026-01-13</div>
+            </div>
+            <div class="update-notifier-body">
+                <div id="update-notifier-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./bundle.js"></script>
+
+</html>
